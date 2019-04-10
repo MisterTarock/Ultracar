@@ -8,7 +8,7 @@
 ## Contributor
 
 - Puissant Baeyens Victor, 12098, [MisterTarock](https://github.com/MisterTarock)
-- De Keyzer  Paolo, 13201, [KB1395](https://github.com/KB1395)
+- De Keyzer  Paolo, 13201, [TouchTheFishy](https://github.com/TouchTheFishy)
 
 
 # References
