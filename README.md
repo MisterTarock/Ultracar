@@ -5,6 +5,14 @@
 * In the second step we'll look on the way to set an algorithm and improve it
 * The final goal is to be able to complete one lap around the circuit suggest in the Udacity simulation.
 
+## How to generate some data before training
+* create a folder "data" in the Ultracar directory
+* launch the simulator in training mode
+* press "R" and select your "data" directory
+* Play the game
+* Save with "R" it will rerun your lap and save the .csv and IMG folder in your data directory
+
+
 ## How to set it
 * Install [Miniconda](https://conda.io/miniconda.html) to use the environment setting.
 * Set the environment in Power Shell
