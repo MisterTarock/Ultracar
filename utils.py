@@ -11,14 +11,22 @@ def load_image(data_dir, image_file):
     """
     Load RGB images from a file
     """
-    return mpimg.imread(os.path.join(data_dir, image_file.strip()))
+    image= cv2.imread(os.path.join(data_dir, image_file.strip()))
+    
+    return image
 
 
 def preprocess(image):
-
-    image = image[60:-25, :, :] # remove the sky and the car front
+    
     image = cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT), cv2.INTER_AREA)
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
+    image = cv2.bilateralFilter(image,10,50,75)
+    image=cv2.cvtColor(image,cv2.COLOR_RGB2YUV)
+    image=cv2.Canny(image,10,20)
+    #cv2.imshow("test",image)
+    #cv2.waitKey()
+    image=cv2.cvtColor(image,cv2.COLOR_GRAY2RGB)
+    
+    
     return image
 
 
@@ -49,7 +57,8 @@ def batch_generator(data_dir, image_paths, steering_angles, batch_size, is_train
 
             image = load_image(data_dir, center)
             # add the image and steering angle to the batch
-            images[i] = preprocess(image)
+            image=preprocess(image)
+            images[i] =image
             steers[i] = steering_angle
             i += 1
             if i == batch_size:
