@@ -37,7 +37,7 @@ prev_image_array = None
 
 #set min/max speed for our autonomous car
 #speed define above 30 to be sure to drive at full speed
-MAX_SPEED = 30
+MAX_SPEED = 35
 MIN_SPEED = 10
 
 #and a speed limit
