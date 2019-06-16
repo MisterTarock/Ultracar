@@ -36,9 +36,30 @@ conda env create -f environments.yml car-behavioral-cloning
 * ECAM-AI-Project.pdf : it's the file with all the instructions for this lab.
 * drive.py : It's the link between the simulator and our generated model.
 * environments.yml : it's a list of dependencies that will automatically be installed inside the environment instead of a separated call of each of them with pip. (N.B. the environments-gpu.yml is also available to install tensorflow-gpu but we choose to note use it because of the difficulties around the requirements for a complete functioning tensorflow-gpu set-up)
-Inside the environment file we wilol find this dependencies:
--
+Inside the environment file we will find this dependencies:
 
+    | environments|car-behavioral-cloning|
+    | ------ | ------ |
+    |Python==3.5.2| The compatible version with TensorFlow 1.1 (warning: it's already the case with this environment but if you install python separatly make sure that it's the 64bit version to be compatible with tensorflow). |
+    |numpy| `red highlight for work in progress` |
+    |matplotlib| |
+    |jupyter| |
+    |opencv3| |
+    |pillow| |
+    |scikit-learn| |
+    |scikit-image| |
+    |scipy| |
+    |h5py| |
+    |eventlet|  |
+    |flask-socketio| |
+    |seaborn| |
+    |pandas| |
+    |imageio| |
+    |moviepy| |
+    |tensorflow==1.1| |
+    |keras==1.2|  |
+
+The environments file isn't modified from the Sourcell version but all depedencies weren't used in the end.
 
 
 
@@ -52,3 +73,4 @@ Inside the environment file we wilol find this dependencies:
 
 - Our "Artificial Intelligence" course
 - The self driving simulator from Udacity https://github.com/udacity/self-driving-car-sim
+- The self driving car from Siraj Raval https://github.com/llSourcell/How_to_simulate_a_self_driving_car
