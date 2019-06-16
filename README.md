@@ -20,10 +20,23 @@
 # Use TensorFlow without GPU
 conda env create -f environments.yml car-behavioral-cloning
 ```
+
+## Usage
 * Go to Anaconda prompt > activate car-behavioral-cloning
 * Got to the right directory (cd " ")
 * Launch the simulator in autonomous
-* python drive.py model.h5 (to test your AI) or python model.py (to train your AI)
+* Write one of the two following commands in the prompt
+
+    ##### Test your model
+    ```python
+    python drive.py model.h5
+    ```
+    ##### Train your model
+    ```python
+    python model.py
+    ```
+* At the end of your training or test phase, exit with a simple *ctrl-c*.
+*N.B. In the testing phase, you have to exit before shutting down the simulation or the prompt won't respond until restart of the simulation.*
 
 ## Model obtained
 * model.h5 : their trained model
@@ -43,23 +56,18 @@ Inside the environment file we will find this dependencies:
     |Python==3.5.2| The compatible version with TensorFlow 1.1 (warning: it's already the case with this environment but if you install python separatly make sure that it's the 64bit version to be compatible with tensorflow). |
     |numpy| Matrice and array processing |
     |matplotlib| Extension of NumPy for object-oriented API and plot generation |
-    |jupyter| *unused* |
     |opencv3| Real-time computer vision |
     |pillow| Python Imaging Library, ad support for opening and saving the differents image after modification |
-    |scikit-learn| library of diverses classifier to train our model |
-    |scikit-image| image processing, *unused* |
-    |scipy| math |
-    |h5py| model... |
-    |eventlet| server communication  |
-    |flask-socketio| server creation|
-    |seaborn| ? |
-    |pandas| file processing (csv)|
-    |imageio| image |
-    |moviepy| ? |
-    |tensorflow==1.1| |
-    |keras==1.2|  |
+    |scikit-learn| Library of diverses classifier to train our model |
+    |scipy| Another mathematical module for optimization, linear algebra, etc to complete NumPy |
+    |h5py| Used to generate the models, it's a set of file format designed to store and organize large amount of data |
+    |eventlet| In addition to SocketIO, allow a hign concurrent networking to boost the performance of the client-server communication  |
+    |flask-socketio| An equivalent of the classical socketIO by the Flask team, the purpose is the same, enable real-time communication between a server and his client|
+    |pandas| Data manipulation for structured file as our *driving-log.csv*|
+    |tensorflow==1.1| High performance numerical computation, allow us the set-up of the Neural Network  |
+    |keras==1.2| It's user-freindly interface above TensorFlow with a set of simplified command to place *layers, activation functions, optimizers, ...*  |
 
-The environments file isn't modified from the ||Source|| version but all depedencies weren't used in the end.
+The environments file isn't modified from the ||Source|| version but all depedencies weren't used in the end (*seaborn, imageio, moviepy, scikit-image, jupyter*).
 
 ## Code explanation
 
@@ -90,33 +98,33 @@ First, we load the training data:
     #And the steering command in a variable y (output data)
     y = data_df['steering'].values
 
-    # With the help of the SciKit train_test_split function, we can 
+    # With the help of the SciKit train_test_split function, we can
     # easily split the data into training data and validation data
     # The amount of the total data that is used for validation is controlled
     # by the parameter 'test_size'.
     # So, a test size of 0.2 would use 80% of data for training and 20%
     # for validation
-    
+
     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=args.test_size, random_state=0)
 ```
 
 Then, we build the neural network. The choice of layers was made following this [Nvidia paper](https://arxiv.org/pdf/1604.07316.pdf), describing a solution found by the Nvidia researchers. We kept the same architecture neural network achitecture since it is very optimized and could save us weeks of trial and error in order to find a viable solution.
 
 ```python
-# For the construction of this neural network, the models library from Keras 
+# For the construction of this neural network, the models library from Keras
 # was used since it simplifies the process
 
 # First, we tell keras that we want a sequential model = a linear stack of layers
 
 model = Sequential()
 
-# Then we create a layer that will normalize the images (allows to avoid saturation 
+# Then we create a layer that will normalize the images (allows to avoid saturation
 # and makes the gradients work better)
 
 model.add(Lambda(lambda x: x/127.5-1.0, input_shape=INPUT_SHAPE))
 
-# Then, we add 5 convolution layers. The idea behind this layers is to 
-# "kernelize" the image. It will separate an image in a multiple set of 
+# Then, we add 5 convolution layers. The idea behind this layers is to
+# "kernelize" the image. It will separate an image in a multiple set of
 # smaller images, in order to facilitate feature recognition.
 # for the parameters of the layers we took the one described in the paper.
 
@@ -134,9 +142,9 @@ model.add(Dropout(args.keep_prob))
 
 model.add(Flatten())
 
-# These layers are the layers that will chose the steering angle following 
-# the data that the convolution layers created. we can see that we start 
-# from 100 neurons to finish with one, the output. Again, the sequence was 
+# These layers are the layers that will chose the steering angle following
+# the data that the convolution layers created. we can see that we start
+# from 100 neurons to finish with one, the output. Again, the sequence was
 # taken from the Nvidia Paper
 
 model.add(Dense(100, activation='elu'))
@@ -194,7 +202,6 @@ At the end of all this process we get a set of models that can be fed in the dri
 ## References
 
 * Our "Artificial Intelligence" course
-* The self driving simulator from Udacity : https://github.com/udacity/self-driving-car-sim 
-* The self driving car project from Mr. S. Raval. : https://github.com/llSourcell/How_to_simulate_a_self_driving_car 
+* The self driving simulator from Udacity : https://github.com/udacity/self-driving-car-sim
+* The self driving car project from Mr. S. Raval. : https://github.com/llSourcell/How_to_simulate_a_self_driving_car
 * The Nvidia paper "End to End Learning for Self-Driving Cars" : https://arxiv.org/pdf/1604.07316.pdf
-
