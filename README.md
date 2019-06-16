@@ -186,12 +186,47 @@ model.fit_generator(batch_generator(args.data_dir, X_train, y_train,    args.bat
 ```
 
 This function takes for arguments:
+
 * the parameters we set at the startup (number of epochs and sample per epochs)
 * the data batch generator (for the training as well as for the valdation)
 * the checkpoint parameters we defined earlier
 * the maximal size of the queue for the generator
 
 At the end of all this process we get a set of models that can be fed in the drive.py program (one at the time). Those models are neural networks with fixed weights that will process the images they are fed with, outputting a steering angle.
+
+### The utils and the generator : utils.py
+The generator mentioned above is simply a function that works in the following steps:
+
+* Get the datasets splitted from the train_test_split mentioned above
+* Chose one image from the set and its corresponding steering angle
+* In order to improve the dataset, some randomly chosed images will be transformed (changing brightness, flipping it,...)
+* Apply a pre-processing : 
+
+    * remove the trunk and the sky from the image
+    * Blur the street details a bit
+    * Change the colors from RGB to YUV (works better with edge detection)
+    * Apply a canny filter (Shows only the edges)
+    * Bring it back to RGB (because the generator takes a 3 layers image input while canny has only 2)
+    * Return the image with only the edges
+* Return two arrays containing the images pre-processed and their corresponding steering angle
+
+### Driving the car : drive.py
+In this program, the code uses the model generated before to make decisions for the steering angle in real time. The part of the code doing this is the following:
+```python
+
+# Load the image sent by the simulator into an array
+image = np.asarray(image)
+# Use the same processing on the image than we used on the training images
+image = utils.preprocess(image) 
+# put it un a 4D array (model requirement)
+image = np.array([image])
+# Use the model created earlier to predict the steering angle
+steering_angle = float(model.predict(image, batch_size=1))
+#send the steering angle instruction to the simulator
+send_control(steering_angle, throttle)
+```
+The rest of the code code is maily composed by the communication methods with the simulator and won't be described in this report.
+
 
 
 ## Contributor
