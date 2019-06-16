@@ -57,7 +57,6 @@ def build_model(args):
     Fully connected: neurons: 50, activation: ELU
     Fully connected: neurons: 10, activation: ELU
     Fully connected: neurons: 1 (output)
-
     # the convolution layers are meant to handle feature engineering
     the fully connected layer for predicting the steering angle.
     dropout avoids overfitting
