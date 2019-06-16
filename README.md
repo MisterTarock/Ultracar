@@ -54,20 +54,20 @@ Inside the environment file we will find this dependencies:
     | environments|car-behavioral-cloning|
     | ------ | ------ |
     |Python==3.5.2| The compatible version with TensorFlow 1.1 (warning: it's already the case with this environment but if you install python separatly make sure that it's the 64bit version to be compatible with tensorflow). |
-    |numpy| Matrice and array processing |
+    |numpy| Matrices and array processing |
     |matplotlib| Extension of NumPy for object-oriented API and plot generation |
     |opencv3| Real-time computer vision |
-    |pillow| Python Imaging Library, ad support for opening and saving the differents image after modification |
-    |scikit-learn| Library of diverses classifier to train our model |
-    |scipy| Another mathematical module for optimization, linear algebra, etc to complete NumPy |
+    |pillow| Python Imaging Library, ad support for opening and saving the different image after modification |
+    |scikit-learn| Library of various classifier to train our model |
+    |scipy| Another mathematical module for optimization, linear algebra,... to complete NumPy |
     |h5py| Used to generate the models, it's a set of file format designed to store and organize large amount of data |
-    |eventlet| In addition to SocketIO, allow a hign concurrent networking to boost the performance of the client-server communication  |
+    |eventlet| In addition to SocketIO, allow a high concurrent networking to boost the performance of the client-server communication  |
     |flask-socketio| An equivalent of the classical socketIO by the Flask team, the purpose is the same, enable real-time communication between a server and his client|
     |pandas| Data manipulation for structured file as our *driving-log.csv*|
     |tensorflow==1.1| High performance numerical computation, allow us the set-up of the Neural Network  |
-    |keras==1.2| It's user-freindly interface above TensorFlow with a set of simplified command to place *layers, activation functions, optimizers, ...*  |
+    |keras==1.2| It's user-friendly interface above TensorFlow with a set of simplified command to place *layers, activation functions, optimizers, ...*  |
 
-The environments file isn't modified from the ||Source|| version but all depedencies weren't used in the end (*seaborn, imageio, moviepy, scikit-image, jupyter*).
+The environments file isn't modified from the ||Source|| version but all dependencies weren't used in the end (*seaborn, imageio, moviepy, scikit-image, jupyter*).
 
 ## Code explanation
 
@@ -78,12 +78,12 @@ This program is used to generate the model files that the car uses to drive itse
 When started, this program uses the following parameters :
 
 * -d : Data directory [Default: "data" folder in the root]
-* -t : When splitting the test batches, selects the proportion of the valdiation part [Default : 0.2]
+* -t : When splitting the test batches, selects the proportion of the validation part [Default : 0.2]
 * -k : Sets the dropout probability for the dropout layer of the NN [Default : 0.5]
 * -n : Number of epochs (number of trainings) [Default :10]
 * -s : Sets the amount of samples used per training [Default : 20000]
 * -b : Sets the amount of images per batch [Default : 40]
-* -o : Sets if only th ebest models are to be saved [Default: true]
+* -o : Sets if only the best models are to be saved [Default: true]
 * -l : Sets the learning rate for the NN [Default : 1e-4]
 
 The code works the following way:
@@ -108,7 +108,7 @@ First, we load the training data:
     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=args.test_size, random_state=0)
 ```
 
-Then, we build the neural network. The choice of layers was made following this [Nvidia paper](https://arxiv.org/pdf/1604.07316.pdf), describing a solution found by the Nvidia researchers. We kept the same architecture neural network achitecture since it is very optimized and could save us weeks of trial and error in order to find a viable solution.
+Then, we build the neural network. The choice of layers was made following this [Nvidia paper](https://arxiv.org/pdf/1604.07316.pdf), describing a solution found by the Nvidia researchers. We kept the same architecture neural network architecture since it is very optimized and could save us weeks of trial and error in order to find a viable solution.
 
 ```python
 # For the construction of this neural network, the models library from Keras
@@ -161,7 +161,7 @@ The training is done in three steps
 * Define the 'checkpoints' through the "ModelCheckpoint" Keras function. This allows to tell the training program how the model should be saved. Here we use a .h5 file type output and that we save only when the epoch is better than the last better one (when the error is minimized).
 
 * Compile the model and define how we want to define the error and the optimizer that will variate the learning factor (here we used Adam, following the ||source|| code).
-For the error, we chosed the mean_squared_error that works this way:
+For the error, we chose the mean_squared_error that works this way:
 
     * square the difference between supposed value and the value we got
     * add up all those differences for as many data points as we have
@@ -172,7 +172,7 @@ This gives us the mean squared error that we want to minimize through gradient d
 model.compile(loss='mean_squared_error', optimizer=Adam(lr=args.learning_rate))
 ```
 
-* Finally we train the compied model with the data generated through a generator (that will be described later)
+* Finally we train the compiled model with the data generated through a generator (that will be described later)
 
 ```python
 model.fit_generator(batch_generator(args.data_dir, X_train, y_train,    args.batch_size, True),
@@ -188,7 +188,7 @@ model.fit_generator(batch_generator(args.data_dir, X_train, y_train,    args.bat
 This function takes for arguments:
 
 * the parameters we set at the startup (number of epochs and sample per epochs)
-* the data batch generator (for the training as well as for the valdation)
+* the data batch generator (for the training as well as for the validation)
 * the checkpoint parameters we defined earlier
 * the maximal size of the queue for the generator
 
@@ -197,10 +197,10 @@ At the end of all this process we get a set of models that can be fed in the dri
 ### The utils and the generator : utils.py
 The generator mentioned above is simply a function that works in the following steps:
 
-* Get the datasets splitted from the train_test_split mentioned above
+* Get the datasets split from the train_test_split mentioned above
 * Chose one image from the set and its corresponding steering angle
-* In order to improve the dataset, some randomly chosed images will be transformed (changing brightness, flipping it,...)
-* Apply a pre-processing : 
+* In order to improve the dataset, some randomly chose images will be transformed (changing brightness, flipping it,...)
+* Apply a pre-processing :
 
     * remove the trunk and the sky from the image
     * Blur the street details a bit
@@ -217,7 +217,7 @@ In this program, the code uses the model generated before to make decisions for 
 # Load the image sent by the simulator into an array
 image = np.asarray(image)
 # Use the same processing on the image than we used on the training images
-image = utils.preprocess(image) 
+image = utils.preprocess(image)
 # put it un a 4D array (model requirement)
 image = np.array([image])
 # Use the model created earlier to predict the steering angle
@@ -225,7 +225,7 @@ steering_angle = float(model.predict(image, batch_size=1))
 #send the steering angle instruction to the simulator
 send_control(steering_angle, throttle)
 ```
-The rest of the code code is maily composed by the communication methods with the simulator and won't be described in this report.
+The rest of the code code is mainly composed by the communication methods with the simulator and won't be described in this report.
 
 
 
