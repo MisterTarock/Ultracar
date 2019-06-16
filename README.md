@@ -55,11 +55,27 @@ Inside the environment file we will find this dependencies:
     |seaborn| |
     |pandas| |
     |imageio| |
-    |moviepy| |
+    |moviepy| | 
     |tensorflow==1.1| |
     |keras==1.2|  |
 
 The environments file isn't modified from the Sourcell version but all depedencies weren't used in the end.
+
+## Code explanation
+
+### Model generation : model.py
+
+This program is used to generate the model files that the car uses to drive itself.
+
+When started, this program uses the following parameters :
+* -d : Data directory [Default: "data" folder in the root]
+* -t : When splitting the test batches, selects the proportion of the valdiation part [Default : 0.2]
+* -k : Sets the dropout probability for the dropout layer of the NN [Default : 0.5]
+* -n : Number of epochs (number of trainings) [Default :10]
+* -s : Sets the amount of samples used per training [Default : 20000]
+* -b : Sets the amount of images per batch [Default : 40]
+* -o : Sets if only th ebest models are to be saved [Default: true]
+* -l : Sets the learning rate for the NN [Default : 1e-4]
 
 
 

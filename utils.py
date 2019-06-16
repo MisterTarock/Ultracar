@@ -15,7 +15,6 @@ def load_image(data_dir, image_file):
 
 
 def preprocess(image):
-
     image = image[60:-25, :, :] # remove the sky and the car front
     image = cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT), cv2.INTER_AREA)
     image = cv2.bilateralFilter(image,7,50,75)
