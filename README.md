@@ -1,9 +1,9 @@
 # Ultracar
-## Ai Automated vehicule goal
+## Ai Automated vehicle goal
 
 * First step is to set the optimal way to acquire enough information and process them
 * In the second step we'll look on the way to set an algorithm and improve it
-* The final goal is to be able to complete one lap around the circuit suggest in the Udacity simulation.
+* The final goal is to be able to complete one lap around the circuit suggests in the Udacity simulation.
 
 ## How to generate some data before training
 * create a folder "data" in the Ultracar directory
@@ -49,22 +49,22 @@ conda env create -f environments.yml car-behavioral-cloning
 * ECAM-AI-Project.pdf : it's the file with all the instructions for this lab.
 * drive.py : It's the link between the simulator and our generated model.
 * environments.yml : it's a list of dependencies that will automatically be installed inside the environment instead of a separated call of each of them with pip. (N.B. the environments-gpu.yml is also available to install tensorflow-gpu but we choose to note use it because of the difficulties around the requirements for a complete functioning tensorflow-gpu set-up)
-Inside the environment file we will find this dependencies:
+Inside the environment file we will find these dependencies:
 
     | environments|car-behavioral-cloning|
     | ------ | ------ |
-    |Python==3.5.2| The compatible version with TensorFlow 1.1 (warning: it's already the case with this environment but if you install python separatly make sure that it's the 64bit version to be compatible with tensorflow). |
+    |Python==3.5.2| The compatible version with TensorFlow 1.1 (warning: it's already the case with this environment but if you install python separately make sure that it's the 64bit version to be compatible with tensorflow). |
     |numpy| Matrices and array processing |
     |matplotlib| Extension of NumPy for object-oriented API and plot generation |
     |opencv3| Real-time computer vision |
     |pillow| Python Imaging Library, ad support for opening and saving the different image after modification |
     |scikit-learn| Library of various classifier to train our model |
     |scipy| Another mathematical module for optimization, linear algebra,... to complete NumPy |
-    |h5py| Used to generate the models, it's a set of file format designed to store and organize large amount of data |
+    |h5py| Used to generate the models, it's a set of file formats designed to store and organize large amount of data |
     |eventlet| In addition to SocketIO, allow a high concurrent networking to boost the performance of the client-server communication  |
     |flask-socketio| An equivalent of the classical socketIO by the Flask team, the purpose is the same, enable real-time communication between a server and his client|
-    |pandas| Data manipulation for structured file as our *driving-log.csv*|
-    |tensorflow==1.1| High performance numerical computation, allow us the set-up of the Neural Network  |
+    |pandas| Data manipulation for structured files as our *driving-log.csv*|
+    |tensorflow==1.1| High performance numerical computation, allows us the set-up of the Neural Network  |
     |keras==1.2| It's user-friendly interface above TensorFlow with a set of simplified command to place *layers, activation functions, optimizers, ...*  |
 
 The environments file isn't modified from the ||Source|| version but all dependencies weren't used in the end (*seaborn, imageio, moviepy, scikit-image, jupyter*).
@@ -114,7 +114,7 @@ Then, we build the neural network. The choice of layers was made following this 
 # For the construction of this neural network, the models library from Keras
 # was used since it simplifies the process
 
-# First, we tell keras that we want a sequential model = a linear stack of layers
+# First, we tell Keras that we want a sequential model = a linear stack of layers
 
 model = Sequential()
 
@@ -123,7 +123,7 @@ model = Sequential()
 
 model.add(Lambda(lambda x: x/127.5-1.0, input_shape=INPUT_SHAPE))
 
-# Then, we add 5 convolution layers. The idea behind this layers is to
+# Then, we add 5 convolution layers. The idea behind these layers is to
 # "kernelize" the image. It will separate an image in a multiple set of
 # smaller images, in order to facilitate feature recognition.
 # for the parameters of the layers we took the one described in the paper.
@@ -134,7 +134,7 @@ model.add(Conv2D(48, 5, 5, activation='elu', subsample=(2, 2)))
 model.add(Conv2D(64, 3, 3, activation='elu'))
 model.add(Conv2D(64, 3, 3, activation='elu'))
 
-# The dropout layer helps preventing the overfitting by removing the useless nodes
+# The dropout layer helps prevent the overfitting by removing the useless nodes
 
 model.add(Dropout(args.keep_prob))
 
@@ -142,7 +142,7 @@ model.add(Dropout(args.keep_prob))
 
 model.add(Flatten())
 
-# These layers are the layers that will chose the steering angle following
+# These layers are the layers that will choose the steering angle following
 # the data that the convolution layers created. we can see that we start
 # from 100 neurons to finish with one, the output. Again, the sequence was
 # taken from the Nvidia Paper
@@ -156,11 +156,11 @@ model.summary()
 
 Finally, we have the training part of the model. In this part we will train the NN multiple times and keep the best model of it.
 
-The training is done in three steps
+The training is done in three steps:
 
 * Define the 'checkpoints' through the "ModelCheckpoint" Keras function. This allows to tell the training program how the model should be saved. Here we use a .h5 file type output and that we save only when the epoch is better than the last better one (when the error is minimized).
 
-* Compile the model and define how we want to define the error and the optimizer that will variate the learning factor (here we used Adam, following the ||source|| code).
+* Compile the model and define how we want to define the error and the optimizer that will influence the learning factor (here we used Adam, following the ||source|| code).
 For the error, we chose the mean_squared_error that works this way:
 
     * square the difference between supposed value and the value we got
@@ -172,7 +172,7 @@ This gives us the mean squared error that we want to minimize through gradient d
 model.compile(loss='mean_squared_error', optimizer=Adam(lr=args.learning_rate))
 ```
 
-* Finally we train the compiled model with the data generated through a generator (that will be described later)
+* Finally, we train the compiled model with the data generated through a generator (that will be described later)
 
 ```python
 model.fit_generator(batch_generator(args.data_dir, X_train, y_train,    args.batch_size, True),
@@ -225,7 +225,7 @@ steering_angle = float(model.predict(image, batch_size=1))
 #send the steering angle instruction to the simulator
 send_control(steering_angle, throttle)
 ```
-The rest of the code code is mainly composed by the communication methods with the simulator and won't be described in this report.
+The rest of the code is mainly composed by the communication methods with the simulator and won't be described in this report.
 
 
 
@@ -237,6 +237,6 @@ The rest of the code code is mainly composed by the communication methods with t
 ## References
 
 * Our "Artificial Intelligence" course
-* The self driving simulator from Udacity : https://github.com/udacity/self-driving-car-sim
-* The self driving car project from Mr. S. Raval. : https://github.com/llSourcell/How_to_simulate_a_self_driving_car
+* The self-driving simulator from Udacity : https://github.com/udacity/self-driving-car-sim
+* The self-driving car project from Mr. S. Raval. : https://github.com/llSourcell/How_to_simulate_a_self_driving_car
 * The Nvidia paper "End to End Learning for Self-Driving Cars" : https://arxiv.org/pdf/1604.07316.pdf
