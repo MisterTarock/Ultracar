@@ -44,13 +44,20 @@ conda env create -f environments.yml car-behavioral-cloning
 * model-001.h5 : our trained model with their utils for 6epoch
 * ...
 
-The *epoch* is a specific time measure. The first epoch is the beginning of the training phase (the time zero) and the following ones are the different iterations of the training phase.
+The *epoch* is a specific time measure. The first epoch is the beginning of the training phase (the time zero) and the following ones are the different iterations of the training phase. During the training phase *model.py* will estimate the efficacity of the test model produced and then save it with the epoch number indicating at which step of the iteration it was produce.
+
+For example, during the training phase:
+* at the first iteration, it will overwrite the model-000 because it estimate that this time the model produced was better.
+* at the second iteration, it won't save it because it estimate that the previous model-001 was better.
+* and so on... 
 
 ## Files description
 * .gitignore : allow us to not sync our IMG folder (it's quite heavy) and our .csv file (it contains the path variable for the image so it's not very shareable).
 * ECAM-AI-Project.pdf : it's the file with all the instructions for this lab.
 * drive.py : It's the link between the simulator and our generated model.
-* model-000.h5
+* model-000.h5 : The different test models produce by our training phase. The number is the epoch number and indicates the iteration's number at the end of the training
+* model.py : The training model used during the training phase to produce the test models.
+* utils.py : a set of process applied on our images to assist *model.py*  
 * environments.yml : it's a list of dependencies that will automatically be installed inside the environment instead of a separated call of each of them with pip. (N.B. the environments-gpu.yml is also available to install tensorflow-gpu but we choose to note use it because of the difficulties around the requirements for a complete functioning tensorflow-gpu set-up)
 Inside the environment file we will find these dependencies:
 
