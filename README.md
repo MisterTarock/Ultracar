@@ -41,21 +41,21 @@ Inside the environment file we will find this dependencies:
     | environments|car-behavioral-cloning|
     | ------ | ------ |
     |Python==3.5.2| The compatible version with TensorFlow 1.1 (warning: it's already the case with this environment but if you install python separatly make sure that it's the 64bit version to be compatible with tensorflow). |
-    |numpy| `red highlight for work in progress` |
-    |matplotlib| |
-    |jupyter| |
-    |opencv3| |
-    |pillow| |
-    |scikit-learn| |
-    |scikit-image| |
-    |scipy| |
-    |h5py| |
-    |eventlet|  |
-    |flask-socketio| |
-    |seaborn| |
-    |pandas| |
-    |imageio| |
-    |moviepy| | 
+    |numpy| Matrice and array processing |
+    |matplotlib| Extension of NumPy for object-oriented API and plot generation |
+    |jupyter| *unused* |
+    |opencv3| Real-time computer vision |
+    |pillow| Python Imaging Library, ad support for opening and saving the differents image after modification |
+    |scikit-learn| library of diverses classifier to train our model |
+    |scikit-image| image processing, *unused* |
+    |scipy| math |
+    |h5py| model... |
+    |eventlet| server communication  |
+    |flask-socketio| server creation|
+    |seaborn| ? |
+    |pandas| file processing (csv)|
+    |imageio| image |
+    |moviepy| ? |
     |tensorflow==1.1| |
     |keras==1.2|  |
 
