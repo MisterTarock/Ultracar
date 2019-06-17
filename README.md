@@ -26,7 +26,11 @@ conda env create -f environments.yml car-behavioral-cloning
 
 ## Usage
 
-* Go to Anaconda prompt > activate car-behavioral-cloning
+* Open the anaconda prompt and type
+
+  ```python
+  activate car-behavioral-cloning
+  ```
 * Got to the right directory
 
   ```python
@@ -98,7 +102,7 @@ Inside the environment file we will find these dependencies:
     |tensorflow==1.1| High performance numerical computation, allows us the set-up of the Neural Network  |
     |keras==1.2| It's user-friendly interface above TensorFlow with a set of simplified command to place *layers, activation functions, optimizers, ...*  |
 
-The environments file isn't modified from the [||Source||](https://github.com/llSourcell/How_to_simulate_a_self_driving_car) version but all dependencies weren't used in the end (*seaborn, imageio, moviepy, scikit-image, jupyter*).
+The environments file isn't modified from the [||Source||](https://github.com/llSourcell/How_to_simulate_a_self_driving_car) version but some dependencies weren't used in the end (such as *seaborn, imageio, moviepy, scikit-image, jupyter*).
 
 ## Code explanation
 
