@@ -58,7 +58,7 @@ conda env create -f environments.yml car-behavioral-cloning
 
 ## Model obtained
 
-* model.h5 : example model that we got from [||Source||](https://github.com/llSourcell/How_to_simulate_a_self_driving_car) repository
+* model_final.h5 : Our final, working model.
 * model-000.h5 : our trained model (first epoch)
 * model-001.h5 : our trained model (second epoch)
 * ...
