@@ -23,7 +23,17 @@ conda env create -f environments.yml car-behavioral-cloning
 
 ## Usage
 * Go to Anaconda prompt > activate car-behavioral-cloning
-* Got to the right directory (cd " ")
+* Got to the right directory
+
+  ```python
+  cd "path"
+  ```
+   *N.B. If you have to change disk storage to find your directory, just write this before (D is the letter of the wanted disk):*
+
+   ```python
+   D:
+   ```
+
 * Launch the simulator in autonomous
 * Write one of the two following commands in the prompt
 
