@@ -170,7 +170,7 @@ The training is done in three steps:
 
 * Define the 'checkpoints' through the "ModelCheckpoint" Keras function. This allows to tell the training program how the model should be saved. Here we use a .h5 file type output and that we save only when the epoch is better than the last better one (when the error is minimized).
 
-* Compile the model and define how we want to define the error and the optimizer that will influence the learning factor (here we used Adam, following the ||source|| code).
+* Compile the model and define how we want to define the error and the optimizer that will influence the learning factor (here we used Adam, following the [||Source||](https://github.com/llSourcell/How_to_simulate_a_self_driving_car) code).
 For the error, we chose the mean_squared_error that works this way:
 
     * square the difference between supposed value and the value we got
