@@ -1,11 +1,12 @@
 # Ultracar
 ## Ai Automated vehicle goal
 
-* First step is to set the optimal way to acquire enough information and process them
-* In the second step we'll look on the way to set an algorithm and improve it
+* First step is to set the optimal way to acquire enough information and process it
+* In the second step we'll implement an algorithm and try improve it
 * The final goal is to be able to complete one lap around the circuit suggests in the Udacity simulation.
 
 ## How to generate some data before training
+
 * create a folder "data" in the Ultracar directory
 * launch the simulator in training mode
 * press "R" and select your "data" directory
@@ -14,14 +15,17 @@
 
 
 ## How to set it
+
 * Install [Miniconda](https://conda.io/miniconda.html) to use the environment setting.
 * Set the environment in Power Shell
+
 ```python
 # Use TensorFlow without GPU
 conda env create -f environments.yml car-behavioral-cloning
 ```
 
 ## Usage
+
 * Go to Anaconda prompt > activate car-behavioral-cloning
 * Got to the right directory
 
@@ -49,25 +53,31 @@ conda env create -f environments.yml car-behavioral-cloning
 *N.B. In the testing phase, you have to exit before shutting down the simulation or the prompt won't respond until restart of the simulation.*
 
 ## Model obtained
-* model.h5 : their trained model
-* model-000.h5 : our trained model with their utils for 1epoch
-* model-001.h5 : our trained model with their utils for 6epoch
+
+* model.h5 : example model that we got from [||Source||](https://github.com/llSourcell/How_to_simulate_a_self_driving_car) repository
+* model-000.h5 : our trained model (first epoch)
+* model-001.h5 : our trained model (second epoch)
 * ...
 
-The *epoch* is a specific time measure. The first epoch is the beginning of the training phase (the time zero) and the following ones are the different iterations of the training phase. During the training phase *model.py* will estimate the efficacity of the test model produced and then save it with the epoch number indicating at which step of the iteration it was produce.
+The *epoch* is a specific time measure. The first epoch is the beginning of the training phase (the time zero) and the following ones are the different iterations of the training phase. During the training phase *model.py* will estimate the efficiency of the test model produced and then, if it had a better performance than the previous ones, save it with the epoch number in the file name.
 
 For example, during the training phase:
 * at the first iteration, it will overwrite the model-000 because it estimate that this time the model produced was better.
-* at the second iteration, it won't save it because it estimate that the previous model-001 was better.
-* and so on...
+* at the second iteration, it won't save it because it estimate that the previous model-000 was better.
+* at the third iteration, the loss is less than any other epoch so the model model-002.h5 will be saved.
+* then, for all the following epochs, the loss will be never as low as the third epoch so no other model will be saved
+
+For this example we will have the following files in the directory
+* model-000.h5
+* model-002.h5
 
 ## Files description
-* .gitignore : allow us to not sync our IMG folder (it's quite heavy) and our .csv file (it contains the path variable for the image so it's not very shareable).
-* ECAM-AI-Project.pdf : it's the file with all the instructions for this lab.
-* drive.py : It's the link between the simulator and our generated model.
-* model-000.h5 : The different test models produce by our training phase. The number is the epoch number and indicates the iteration's number when the model was saved.
-* model.py : The training model used during the training phase to produce the test models.
-* utils.py : a set of process applied on our images to assist *model.py*  
+* .gitignore : allows us to ignore IMG folder (it's quite heavy) and our .csv file when versioning (it contains the path variable for the image so it's not very shareable).
+* ECAM-AI-Project.pdf : file with all the instructions for this lab.
+* drive.py : link between the simulator and our generated model.
+* model-{xxx}.h5 : The different test models produced by our training phase. The number is the epoch number and indicates its iteration number.
+* model.py : The training code used during the training phase to produce the test models.
+* utils.py : a set of processes applied on our images to assist *model.py*  
 * environments.yml : it's a list of dependencies that will automatically be installed inside the environment instead of a separated call of each of them with pip. (N.B. the environments-gpu.yml is also available to install tensorflow-gpu but we choose to note use it because of the difficulties around the requirements for a complete functioning tensorflow-gpu set-up)
 Inside the environment file we will find these dependencies:
 
@@ -245,7 +255,7 @@ steering_angle = float(model.predict(image, batch_size=1))
 #send the steering angle instruction to the simulator
 send_control(steering_angle, throttle)
 ```
-The rest of the code is mainly composed by the communication methods with the simulator and won't be described in this report.
+The rest of the code is mainly composed by the communication methods with the simulator and will not be described in this report.
 
 
 
