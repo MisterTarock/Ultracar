@@ -77,7 +77,7 @@ Inside the environment file we will find these dependencies:
     |tensorflow==1.1| High performance numerical computation, allows us the set-up of the Neural Network  |
     |keras==1.2| It's user-friendly interface above TensorFlow with a set of simplified command to place *layers, activation functions, optimizers, ...*  |
 
-The environments file isn't modified from the ||Source|| version but all dependencies weren't used in the end (*seaborn, imageio, moviepy, scikit-image, jupyter*).
+The environments file isn't modified from the [||Source||](https://github.com/llSourcell/How_to_simulate_a_self_driving_car) version but all dependencies weren't used in the end (*seaborn, imageio, moviepy, scikit-image, jupyter*).
 
 ## Code explanation
 
