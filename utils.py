@@ -20,6 +20,7 @@ def preprocess(image):
     image = cv2.bilateralFilter(image,7,50,75)
     image = cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
     image = cv2.Canny (image,5,20)
+    
     image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     return image
 
