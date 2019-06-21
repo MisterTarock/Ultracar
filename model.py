@@ -1,22 +1,12 @@
-import pandas as pd # data analysis toolkit - create, read, update, delete datasets
-import numpy as np #matrix math
-from sklearn.model_selection import train_test_split #to split out training and testing data
-
-#keras is a high level wrapper on top of tensorflow (machine learning library)
-#The Sequential container is a linear stack of layers
+import pandas as pd
+import numpy as np 
+from sklearn.model_selection import train_test_split 
 from keras.models import Sequential
-#popular optimization strategy that uses gradient descent
 from keras.optimizers import Adam
-#to save our model periodically as checkpoints for loading later
 from keras.callbacks import ModelCheckpoint
-#what types of layers do we want our model to have?
 from keras.layers import Lambda, Conv2D, MaxPooling2D, Dropout, Dense, Flatten
-
-#helper class to define input shape and generate training images given image paths & steering angles
 from utils import INPUT_SHAPE, batch_generator
-#for command line arguments
 import argparse
-#for reading files
 import os
 
 #for debugging, allows for reproducible (deterministic) results
@@ -30,14 +20,17 @@ def load_data(args):
     #reads CSV file into a single dataframe variable
     data_df = pd.read_csv(os.path.join(os.getcwd(), args.data_dir, 'driving_log.csv'), names=['center', 'left', 'right', 'steering', 'throttle', 'reverse', 'speed'])
 
-    #yay dataframes, we can select rows and columns by their names
-    #we'll store the camera images as our input data
+    #we export the images (divided per camera) in a new variable X (input data)
     X = data_df[['center', 'left', 'right']].values
     #and our steering commands as our output data
     y = data_df['steering'].values
 
-    #now we can split the data into a training (80), testing(20), and validation set
-    #thanks scikit learn
+    # With the help of the SciKit train_test_split function, we can
+    # easily split the data into training data and validation data
+    # The amount of the total data that is used for validation is controlled
+    # by the parameter 'test_size'.
+    # So, a test size of 0.2 would use 80% of data for training and 20%
+    # for validation
     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=args.test_size, random_state=0)
 
     return X_train, X_valid, y_train, y_valid
@@ -46,31 +39,34 @@ def load_data(args):
 def build_model(args):
     """
     NVIDIA model used
-    Image normalization to avoid saturation and make gradients work better.
-    Convolution: 5x5, filter: 24, strides: 2x2, activation: ELU
-    Convolution: 5x5, filter: 36, strides: 2x2, activation: ELU
-    Convolution: 5x5, filter: 48, strides: 2x2, activation: ELU
-    Convolution: 3x3, filter: 64, strides: 1x1, activation: ELU
-    Convolution: 3x3, filter: 64, strides: 1x1, activation: ELU
-    Drop out (0.5)
-    Fully connected: neurons: 100, activation: ELU
-    Fully connected: neurons: 50, activation: ELU
-    Fully connected: neurons: 10, activation: ELU
-    Fully connected: neurons: 1 (output)
-    # the convolution layers are meant to handle feature engineering
-    the fully connected layer for predicting the steering angle.
-    dropout avoids overfitting
-    ELU(Exponential linear unit) function takes care of the Vanishing gradient problem.
+    
     """
+    # For the construction of this neural network, the models library from Keras
+    # was used since it simplifies the process
+
+    # First, we tell Keras that we want a sequential model = a linear stack of layers
     model = Sequential()
+    # Then we create a layer that will normalize the images (allows to avoid saturation
+    # and makes the gradients work better)
     model.add(Lambda(lambda x: x/127.5-1.0, input_shape=INPUT_SHAPE))
+    # Then, we add 5 convolution layers. The idea behind these layers is to
+    # "kernelize" the image. It will separate an image in a multiple set of
+    # smaller images, in order to facilitate feature recognition.
+    # for the parameters of the layers we took the one described in the paper.
     model.add(Conv2D(24, 5, 5, activation='elu', subsample=(2, 2)))
     model.add(Conv2D(36, 5, 5, activation='elu', subsample=(2, 2)))
     model.add(Conv2D(48, 5, 5, activation='elu', subsample=(2, 2)))
     model.add(Conv2D(64, 3, 3, activation='elu'))
     model.add(Conv2D(64, 3, 3, activation='elu'))
+    # The dropout layer helps prevent the overfitting by removing the useless nodes
     model.add(Dropout(args.keep_prob))
+    # flattens the data before entering the dense part
     model.add(Flatten())
+    
+    # These layers are the layers that will choose the steering angle following
+    # the data that the convolution layers created. we can see that we start
+    # from 100 neurons to finish with one, the output. Again, the sequence was
+    # taken from the Nvidia Paper
     model.add(Dense(100, activation='elu'))
     model.add(Dense(50, activation='elu'))
     model.add(Dense(10, activation='elu'))
@@ -84,33 +80,28 @@ def train_model(model, args, X_train, X_valid, y_train, y_valid):
     """
     Train the model
     """
-    #Saves the model after every epoch.
-    #quantity to monitor, verbosity i.e logging mode (0 or 1),
-    #if save_best_only is true the latest best model according to the quantity monitored will not be overwritten.
-    #mode: one of {auto, min, max}. If save_best_only=True, the decision to overwrite the current save file is
-    # made based on either the maximization or the minimization of the monitored quantity. For val_acc,
-    #this should be max, for val_loss this should be min, etc. In auto mode, the direction is automatically
-    # inferred from the name of the monitored quantity.
+    # Define the 'checkpoints' through the "ModelCheckpoint" Keras function. 
+    # This allows to tell the training program how the model should be saved. 
+    # Here we use a .h5 file type output and that we save only when the epoch 
+    # is better than the last better one (when the error is minimized).
     checkpoint = ModelCheckpoint('model-{epoch:03d}.h5',
                                  monitor='val_loss',
                                  verbose=0,
                                  save_best_only=args.save_best_only,
                                  mode='auto')
 
-    #calculate the difference between expected steering angle and actual steering angle
-    #square the difference
-    #add up all those differences for as many data points as we have
-    #divide by the number of them
-    #that value is our mean squared error! this is what we want to minimize via
-    #gradient descent
+    # Compile the model and define how we want to define the error and the optimizer that will 
+    # influence the learning factor (here we used Adam, following the ||Source|| code). For the error, 
+    # we chose the mean_squared_error that works this way:
+    # - square the difference between supposed value and the value we got
+    # - add up all those differences for as many data points as we have
+    # - divide by the total number This gives us the mean squared error that we want to minimize through gradient descent
+
+
     model.compile(loss='mean_squared_error', optimizer=Adam(lr=args.learning_rate))
 
-    #Fits the model on data generated batch-by-batch by a Python generator.
+    #Finally, we train the compiled model with the data generated through a generator (see the explanation in utils.py)
 
-    #The generator is run in parallel to the model, for efficiency.
-    #For instance, this allows you to do real-time data augmentation on images on CPU in
-    #parallel to training your model on GPU.
-    #so we reshape our data into their appropriate batches and train our model simulatenously
     model.fit_generator(batch_generator(args.data_dir, X_train, y_train, args.batch_size, True),
                         args.samples_per_epoch,
                         args.nb_epoch,
@@ -120,7 +111,7 @@ def train_model(model, args, X_train, X_valid, y_train, y_valid):
                         callbacks=[checkpoint],
                         verbose=1)
 
-#for command line args
+#used to convert the any input in usable data
 def s2b(s):
     """
     Converts a string to boolean value
