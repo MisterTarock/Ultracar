@@ -1,35 +1,23 @@
-#parsing command line arguments
 import argparse
-#decoding camera images
 import base64
-#for frametimestamp saving
 from datetime import datetime
-#reading and writing files
 import os
-#high level file operations
 import shutil
-#matrix math
 import numpy as np
-#real-time server
 import socketio
-#concurrent networking
 import eventlet
-#web server gateway interface
 import eventlet.wsgi
-#image manipulation
 from PIL import Image
-#web framework
 from flask import Flask
-#input output
 from io import BytesIO
 
 #load our saved model
 from keras.models import load_model
 
-#helper class
+#Our preprocessing class - It generate also the different batches of data
 import utils
 
-# create a Socket.IO server
+# create a Socket.IO server for the communication between drive.py and the simulator
 sio = socketio.Server()
 #init our model and image array as empty
 model = None
@@ -57,7 +45,7 @@ def telemetry(sid, data):
         image = Image.open(BytesIO(base64.b64decode(data["image"])))
 
         # Use your model to compute steering and throttle
-        # values send to the simulator
+        # The values send to the simulator during the testing phase
         try:
             image = np.asarray(image)       # from PIL image to numpy array
             image = utils.preprocess(image) # apply the preprocessing
@@ -65,7 +53,9 @@ def telemetry(sid, data):
 
             # predict the steering angle for the image
             steering_angle = float(model.predict(image, batch_size=1))
-            # lower the throttle as the speed increases
+
+            # The speed is "regulated" by drive.py,
+            # it will lower the throttle as the speed increases
             # if the speed is above the current speed limit, we are on a downhill.
             # make sure we slow down first and then go back to the original max speed.
             global speed_limit
